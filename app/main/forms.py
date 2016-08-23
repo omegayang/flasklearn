@@ -1,16 +1,19 @@
+#-*- coding:UTF-8 -*-
 from flask_wtf import Form
 from wtforms import StringField, SubmitField,TextAreaField,SelectField
 from wtforms.validators import Required, Email,Length,Regexp,EqualTo
+from ..models import Role,User,Post
+from flask_pagedown.fields import PageDownField
 
 class EditProfileForm(Form):
-	truename     = StringField('True name',validators=[Length(0,64)])
+	truename = StringField('True name',validators=[Length(0,64)])
 	location = StringField('Location', validators=[Length(0, 64)])
 	about_me = TextAreaField('About me')
 	submit   = SubmitField('Submit')
 
 class EditProfileAdminForm(Form):
-	username  = StringField('Username', validators=[Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
-	'Usernames must have only letters, numbers, dots or underscores')])
+	username  = StringField('Username', validators=[Required(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$',\
+	 0,'Usernames must have only letters, numbers, dots or underscores')])
 	role      = SelectField('Role', coerce=int)
 	truename  = StringField('True name', validators=[Length(0, 64)])
 	location  = StringField('Location', validators=[Length(0, 64)])
@@ -24,3 +27,6 @@ class EditProfileAdminForm(Form):
 		if field.data != self.user.username and \
 		User.query.filter_by(username=field.data).first():
 			raise ValidationError('Username already in use.')
+class PostForm(Form):
+	body=PageDownField(u'说出你的想法吧！',validators=[Required()])
+	submit=SubmitField(u'发表')

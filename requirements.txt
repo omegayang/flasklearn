@@ -5,3 +5,5 @@ flask-sqlalchemy
 flask-moment
 flask-migrate
 flask-script
+flask-pagedown
+bleach

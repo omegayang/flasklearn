@@ -10,12 +10,14 @@
 	{% endif %}
 	{% if current_user.is_administrator() %}
 	<a class="btn btn-danger" href="{{ url_for('.edit_profile_admin', id=user.id) }}">
-	Edit Profile [Admin]
+	编辑 [Admin]
 	</a>
 	{% endif %}
 </div>
 <div class="row">
-<div class="col-md-6 col-md-offset-3">	
+<div class='col-md-3'>
+<img class="img-rounded profile-thumbnail" src="{{ url_for('static',filename='fuzi32.png') }}">
+<div class='post-body'>
 	<p>	真实姓名：{% if user.truename %}{{ user.truename }}{% endif %} </p>
 	<p>	来自：{% if user.location %}
 		<a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a>
@@ -28,7 +30,9 @@
 	<p>关    于：{{ user.about_me }}</p>	
 	<p>注册时间：{{ moment(user.member_since).format('L') }}.</p>
 	<p>最近登录：{{ moment(user.last_seen).fromNow() }}.</p>
-	
 </div>
+</div>
+<div class='col-md-6'>{{user.username}} 的文章：
+	{% include '_posts.html' %}
 </div>
 {% endblock %}

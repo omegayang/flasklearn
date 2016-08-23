@@ -1,14 +1,32 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
+{% endblock %}
+{% import "_macros.html" as macros %}
 {% block title %}Flasky{% endblock %}
 {% block page_content %}
 <div class="page-header">
-	Hello,<h1>
+	<h1>Hello,
 	{% if current_user.is_authenticated %}
 		{{ current_user.username }}
 	{% else %}
 		Stranger
 	{% endif %}!</h1>
 </div>
-
+<div class='row'>	
+	<div class='col-md-9'>
+		{% include '_posts.html'%}
+	<div class="pagination">
+	{{macros.pagination_widget(pagination,'.index')}}
+	</div>
+	</div>
+	<div class='col-md-3'>
+	{% if current_user.can(Permission.WRITE_ARTICLES) %}
+	{{ wtf.quick_form(form) }}
+	{% endif %}
+	</div>
+</div>
 {% endblock %}

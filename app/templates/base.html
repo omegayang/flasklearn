@@ -4,6 +4,7 @@
 {{ super() }}
 	<link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}" type="image/x-icon">
 	<link rel="icon" href="{{ url_for('static', filename = 'favicon.ico') }}" type="image/x-icon">
+	<link href="{{ url_for('static', filename = 'style.css') }}" rel="stylesheet">
 {% endblock %}
 {% block navbar %}
 <div class="navbar navbar-inverse" role="navigation">
