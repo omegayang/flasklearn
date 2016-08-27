@@ -15,24 +15,43 @@
 	{% endif %}
 </div>
 <div class="row">
-<div class='col-md-3'>
-<img class="img-rounded profile-thumbnail" src="{{ url_for('static',filename='fuzi32.png') }}">
-<div class='post-body'>
-	<p>	真实姓名：{% if user.truename %}{{ user.truename }}{% endif %} </p>
-	<p>	来自：{% if user.location %}
-		<a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a>
+	<div class='col-md-5'>
+	<img class="img-rounded profile-thumbnail" src="{{ url_for('static',filename='fuzi32.png') }}">
+	<div class='post-body'>
+		<p>	真实姓名：{% if user.truename %}{{ user.truename }}{% endif %} </p>
+		<p>	来自：{% if user.location %}
+			<a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a>
+			{% endif %}
+		</p>	
+		{% if current_user.is_administrator() %}
+			<p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
 		{% endif %}
-	</p>	
-	{% if current_user.is_administrator() %}
-		<p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+		
+		<p>关    于：{{ user.about_me }}</p>	
+		<p>注册时间：{{ moment(user.member_since).format('L') }}.</p>
+		<p>最近登录：{{ moment(user.last_seen).fromNow() }}.</p>
+	</div>
+	{% if current_user.can(Permission.FOLLOW) and user != current_user %}
+	    {% if not current_user.is_following(user) %}
+	    <a href="{{ url_for('.follow', username=user.username) }}"
+	        class="btn btn-primary">关注</a>
+	    {% else %}
+	    <a href="{{ url_for('.unfollow', username=user.username) }}"
+	        class="btn btn-default">取消关注</a>
+	    {% endif %}
 	{% endif %}
-	
-	<p>关    于：{{ user.about_me }}</p>	
-	<p>注册时间：{{ moment(user.member_since).format('L') }}.</p>
-	<p>最近登录：{{ moment(user.last_seen).fromNow() }}.</p>
+	<a href="{{ url_for('.followers', username=user.username) }}">
+	粉丝: <span class="badge">{{ user.followers.count() }}</span>
+	</a>
+	<a href="{{ url_for('.followed_by', username=user.username) }}">
+	关注了: <span class="badge">{{ user.followed.count() }}</span>
+	</a>
+	{% if current_user.is_authenticated and user != current_user and
+	    user.is_following(current_user) %}
+	| <span class="label label-default">在关注你哟</span>
+	{% endif %}
 </div>
-</div>
-<div class='col-md-6'>{{user.username}} 的文章：
+<div class='col-md-7'>{{user.username}} 的文章：
 	{% include '_posts.html' %}
 </div>
 {% endblock %}
